@@ -32,25 +32,33 @@ public class Player : MonoBehaviour
         if (FindObjectsByType<Player>(FindObjectsSortMode.None).Length > 1)
         {
             transform.position = new Vector3(18.65f, 2.83f, -3f);
+            transform.localEulerAngles = new Vector3(0f, -90f, 0f);
             meshRenderer.material = materials[0];
         }
         else
         {
             transform.position = new Vector3(-18.65f, 2.83f, -3f);
+            transform.localEulerAngles = new Vector3(0f, 90f, 0f);
             meshRenderer.material = materials[1];
         }
     }
 
     void FixedUpdate()
     {
-        Vector2 movement = MoveAction.ReadValue<Vector2>() * movementSpeed;       
-        rb.velocity = new Vector3(movement.x, rb.velocity.y, movement.y);
-
-        Vector3 rbVelocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
-        if (MoveAction.ReadValue<Vector2>().magnitude > 0.25f)
+        Vector2 movement = MoveAction.ReadValue<Vector2>() * movementSpeed;      
+        if (movement.magnitude > 1f)
         {
+            rb.velocity = new Vector3(movement.x, rb.velocity.y, movement.y);
+
+            Vector3 rbVelocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
             transform.forward = Vector3.Lerp(transform.forward, rbVelocity.normalized, 1f);
         }
+        else 
+        {
+            rb.velocity = new Vector3(0f, rb.velocity.y, 0f);
+        }
+
+        isGrounded = Physics.OverlapSphere(transform.position - (transform.up * 0.475f), 0.75f).Length > 1;
     }
 
     private void Update()
@@ -59,15 +67,5 @@ public class Player : MonoBehaviour
         {
             rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
         }
-    }
-
-    private void OnCollisionEnter(Collision collision)
-    {
-        isGrounded = true;
-    }
-
-    private void OnCollisionExit(Collision collision)
-    {
-        isGrounded = false;
     }
 }
