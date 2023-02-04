@@ -134,6 +134,7 @@ MonoBehaviour:
   materials:
   - {fileID: 2100000, guid: 133a53e30e9077b4c9e9520c07e0a41a, type: 2}
   - {fileID: 2100000, guid: 9129313abe55fc9449814f626ac68912, type: 2}
+  Health: 100
 --- !u!1001 &3415277701139322189
 PrefabInstance:
   m_ObjectHideFlags: 0
