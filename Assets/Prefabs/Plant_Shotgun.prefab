@@ -148,7 +148,7 @@ Transform:
   - {fileID: 3407034342897834456}
   - {fileID: 2071514787606626745}
   m_Father: {fileID: 0}
-  m_RootOrder: 15
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: -10.35, z: 0}
 --- !u!136 &7331639990735475013
 CapsuleCollider:
@@ -187,7 +187,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   type: 3
   damage: 5
-  fireRange: 15
+  fireRange: 13
   fireRate: 2.5
   aimSpeed: 1.5
   bulletSpeed: 15
@@ -297,7 +297,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Controller
       value: 
-      objectReference: {fileID: 9100000, guid: f45c551589035594782eaa4af59650a6, type: 2}
+      objectReference: {fileID: 9100000, guid: 67525626dd6a152499c6764a18066785, type: 2}
     - target: {fileID: 6275249965653268515, guid: 3701a742b6d65e74fa769b1a73a80cd3,
         type: 3}
       propertyPath: m_Materials.Array.data[0]

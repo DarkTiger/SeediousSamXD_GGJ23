@@ -34,7 +34,7 @@ Transform:
   - {fileID: 4753765411310991550}
   - {fileID: 4753765410824263048}
   m_Father: {fileID: 0}
-  m_RootOrder: 16
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: -10.35, z: 0}
 --- !u!136 &4753765409328590606
 CapsuleCollider:
@@ -73,7 +73,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   type: 2
   damage: 2.5
-  fireRange: 20
+  fireRange: 18
   fireRate: 0.5
   aimSpeed: 2
   bulletSpeed: 10
@@ -302,7 +302,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Controller
       value: 
-      objectReference: {fileID: 9100000, guid: 624a8a3ee7179324197adf674a410370, type: 2}
+      objectReference: {fileID: 9100000, guid: d08933afb07c26f489236c31e666e768, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

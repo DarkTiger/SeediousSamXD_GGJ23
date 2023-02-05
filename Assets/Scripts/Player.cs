@@ -36,6 +36,7 @@ public class Player : MonoBehaviour
     PlayerInput playerInput;
     SkinnedMeshRenderer skinnedMeshRenderer;
     Animator animator;
+    Camera camera;
     public Rigidbody rb { get; private set; }
     bool isGrounded = false;
     bool lastGrounded = false;
@@ -58,6 +59,8 @@ public class Player : MonoBehaviour
         skinnedMeshRenderer = GetComponentInChildren<SkinnedMeshRenderer>();
         animator = GetComponentInChildren<Animator>();
         playerInput = GetComponent<PlayerInput>();
+        camera = FindObjectOfType<Camera>();
+
         MoveAction = playerInput.actions["Movement"];
         VisualAction = playerInput.actions["Visual"];
         JumpAction = playerInput.actions["Jump"];
@@ -104,7 +107,7 @@ public class Player : MonoBehaviour
 
         if (lastGrounded != isGrounded)
         {
-            AudioSource.PlayClipAtPoint(PlayerIndex == 1? LandingP1SFx : LandingP2SFX, transform.position);
+            AudioSource.PlayClipAtPoint(PlayerIndex == 1? LandingP1SFx : LandingP2SFX, camera.transform.position);
             lastGrounded = isGrounded;
         }
     }
@@ -115,7 +118,7 @@ public class Player : MonoBehaviour
 
         if (JumpAction.WasPressedThisFrame() && isGrounded)
         {
-            AudioSource.PlayClipAtPoint(PlayerIndex == 1? JumpP1SFX : JumpP2SFX, transform.position);
+            AudioSource.PlayClipAtPoint(PlayerIndex == 1? JumpP1SFX : JumpP2SFX, camera.transform.position);
             rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
         }
 
@@ -185,7 +188,7 @@ public class Player : MonoBehaviour
                 {
                     if (i < InventorySlots.Length && InventorySlots[s] == ItemType.None)
                     {
-                        AudioSource.PlayClipAtPoint(GatherSFX, transform.position);
+                        AudioSource.PlayClipAtPoint(GatherSFX, camera.transform.position);
                         InventorySlots[s] = seeds[i].ItemType;
                         HUD.Instance.UpdateInventory(this);
                         Destroy(seeds[i].gameObject);
@@ -208,7 +211,7 @@ public class Player : MonoBehaviour
                 {
                     if (plantsPrefabs[i].Prefab)
                     {
-                        AudioSource.PlayClipAtPoint(PlantSFX[Random.Range(0, PlantSFX.Length)], transform.position);
+                        AudioSource.PlayClipAtPoint(PlantSFX[Random.Range(0, PlantSFX.Length)], camera.transform.position);
 
                         Vector3 position = transform.position + transform.forward;
                         position.y = 0f;
@@ -239,7 +242,7 @@ public class Player : MonoBehaviour
                 Vector3.Dot((seedBags[i].transform.position - transform.position).normalized, transform.forward) >= 0.7f)
             {
                 emptyHit = false;
-                AudioSource.PlayClipAtPoint(AttackHitSFX, transform.position);
+                AudioSource.PlayClipAtPoint(AttackHitSFX, camera.transform.position);
                 seedBags[i].OpenBag();
                 break;
             }
@@ -254,7 +257,7 @@ public class Player : MonoBehaviour
                 Vector3.Dot((players[i].transform.position - transform.position).normalized, transform.forward) >= 0.7f)
             {
                 emptyHit = false;
-                AudioSource.PlayClipAtPoint(AttackHitSFX, transform.position);
+                AudioSource.PlayClipAtPoint(AttackHitSFX, camera.transform.position);
                 players[i].rb.AddForce((transform.forward) + (Vector3.up ) * 50f, ForceMode.Impulse);
                 break;
             }
@@ -269,7 +272,7 @@ public class Player : MonoBehaviour
                 Vector3.Dot((plants[i].transform.position - transform.position).normalized, transform.forward) >= 0.7f)
             {
                 emptyHit = false;
-                AudioSource.PlayClipAtPoint(AttackHitSFX, transform.position);
+                AudioSource.PlayClipAtPoint(AttackHitSFX, camera.transform.position);
                 plants[i].TakeDamage();
                 break;
             }
@@ -277,7 +280,7 @@ public class Player : MonoBehaviour
 
         if (emptyHit)
         {
-            AudioSource.PlayClipAtPoint(AttackEmptySFX, transform.position);
+            AudioSource.PlayClipAtPoint(AttackEmptySFX, camera.transform.position);
         }
     }
 
@@ -293,14 +296,14 @@ public class Player : MonoBehaviour
         }
         else
         {
-            AudioSource.PlayClipAtPoint(PlayerIndex == 1? TakeDamageP1SFX[Random.Range(0, TakeDamageP1SFX.Length)] : TakeDamageP2SFX[Random.Range(0, TakeDamageP2SFX.Length)], transform.position);
+            AudioSource.PlayClipAtPoint(PlayerIndex == 1? TakeDamageP1SFX[Random.Range(0, TakeDamageP1SFX.Length)] : TakeDamageP2SFX[Random.Range(0, TakeDamageP2SFX.Length)], camera.transform.position);
             animator.SetTrigger("TakeDamage");
         }
     }
     
     public void Die()
     {
-        AudioSource.PlayClipAtPoint(PlayerIndex == 1 ? TakeDamageP1SFX[Random.Range(0, TakeDamageP1SFX.Length)] : TakeDamageP2SFX[Random.Range(0, TakeDamageP2SFX.Length)], transform.position);
+        AudioSource.PlayClipAtPoint(PlayerIndex == 1 ? TakeDamageP1SFX[Random.Range(0, TakeDamageP1SFX.Length)] : TakeDamageP2SFX[Random.Range(0, TakeDamageP2SFX.Length)], camera.transform.position);
         animator.SetBool("Died", true);
         Died = true;
     }

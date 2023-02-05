@@ -1232,7 +1232,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 455f2d512cf822e43b9322c359810a25, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.75
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -1515,8 +1515,8 @@ MonoBehaviour:
   - {fileID: 269101508}
   - {fileID: 1151806711}
   - {fileID: 1710987925}
-  VictoryP1: {fileID: 0}
-  VictoryP2: {fileID: 0}
+  VictoryP1: {fileID: 603516468}
+  VictoryP2: {fileID: 1662727478}
   itemIcons:
   - Type: 0
     Sprite: {fileID: 21300000, guid: eaea1429aa6aba745b57e6a49741c91e, type: 3}

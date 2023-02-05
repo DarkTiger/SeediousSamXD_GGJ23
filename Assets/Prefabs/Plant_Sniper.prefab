@@ -117,7 +117,7 @@ Transform:
   - {fileID: 2190309879394815312}
   - {fileID: 2190309880133425388}
   m_Father: {fileID: 0}
-  m_RootOrder: 17
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: -10.35, z: 0}
 --- !u!136 &2190309879624310950
 CapsuleCollider:
@@ -302,7 +302,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Controller
       value: 
-      objectReference: {fileID: 9100000, guid: c48f5a2a5e1885f4193736c255d3dd78, type: 2}
+      objectReference: {fileID: 9100000, guid: 88fc1a984bd489a4db9252441839365f, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

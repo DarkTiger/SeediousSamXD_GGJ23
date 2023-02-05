@@ -14,7 +14,6 @@ public class Plant : MonoBehaviour
     [SerializeField] Transform firePosition = null;
     [SerializeField] GameObject bulletPrefab = null;
     [SerializeField] Material[] materials;
-
     [SerializeField] AudioClip FireSFX;
     [SerializeField] AudioClip DeadSFX;
 
@@ -27,11 +26,13 @@ public class Plant : MonoBehaviour
     float currentFireTime = 0f;
     Animator animator = null;
     bool dead = false;
+    Camera camera;
 
 
     private void Awake()
     {
         animator = GetComponentInChildren<Animator>(true);
+        camera = FindObjectOfType<Camera>();
     }
 
     private IEnumerator Start()
@@ -108,7 +109,7 @@ public class Plant : MonoBehaviour
 
     void SpawnBullet(Vector3 rotOffset, Vector3 posOffset)
     {
-        AudioSource.PlayClipAtPoint(FireSFX, transform.position);
+        AudioSource.PlayClipAtPoint(FireSFX, camera.transform.position);
 
         Bullet bullet = Instantiate(bulletPrefab, firePosition.position + posOffset, Quaternion.Euler(firePosition.eulerAngles + rotOffset)).GetComponent<Bullet>();
         bullet.PlayerIndex = PlayerIndex;
@@ -135,7 +136,7 @@ public class Plant : MonoBehaviour
 
     IEnumerator Die()
     {
-        AudioSource.PlayClipAtPoint(DeadSFX, transform.position);
+        AudioSource.PlayClipAtPoint(DeadSFX, camera.transform.position);
 
         yield return new WaitForSeconds(1.25f);
 

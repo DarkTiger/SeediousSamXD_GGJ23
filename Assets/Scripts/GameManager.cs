@@ -25,10 +25,18 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] AudioSource source;
 
+    public static GameManager Instance = null;
+
     Player[] players;
 
     bool gameEnded = false;
 
+
+
+    private void Awake()
+    {
+        Instance = this;
+    }
 
     private IEnumerator Start()
     {
@@ -97,22 +105,24 @@ public class GameManager : MonoBehaviour
 
             for (int i = 0; i < players.Length; i++)
             {
-                if (players[i].Died && players[i].PlayerIndex == 1)
+                if (players[i].Died && players[i].PlayerIndex == 2)
                 {
                     if (!HUD.Instance.VictoryP1.gameObject.activeSelf)
                     {
                         HUD.Instance.VictoryP1.gameObject.SetActive(true);
+                        source.Stop();
 
                         StartCoroutine(ReturnToMenu());
 
                         gameEnded = true;
                     }
                 }
-                else if (players[i].Died && players[i].PlayerIndex == 2)
+                else if (players[i].Died && players[i].PlayerIndex == 1)
                 {
                     if (!HUD.Instance.VictoryP2.gameObject.activeSelf)
                     {
                         HUD.Instance.VictoryP2.gameObject.SetActive(true);
+                        source.Stop();
 
                         StartCoroutine(ReturnToMenu());
 
@@ -121,6 +131,24 @@ public class GameManager : MonoBehaviour
                 }
             }
         }
+    }
+
+    public int GetPhase()
+    {
+        if (phase3)
+        {
+            return 3;
+        }
+        else if (phase2)
+        {
+            return 2;
+        }
+        else if (phase1)
+        {
+            return 1;
+        }
+
+        return 0;
     }
 
     IEnumerator ReturnToMenu()

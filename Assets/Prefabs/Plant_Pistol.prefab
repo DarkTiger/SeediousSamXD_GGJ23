@@ -73,7 +73,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   type: 1
   damage: 5
-  fireRange: 20
+  fireRange: 18
   fireRate: 2
   aimSpeed: 2.5
   bulletSpeed: 20
