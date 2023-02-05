@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 9210926414061848714}
   - component: {fileID: 5129480208904094168}
   m_Layer: 0
-  m_Name: SphereRed
+  m_Name: Seed_Pistol
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -146,4 +146,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 18213d24024002244ba976de9d2d0d3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  type: 1
   rb: {fileID: 9210926414061848714}
+  plantPrefab: {fileID: 7279229582074701419, guid: 2a38baa672bcc954ca57550355338547,
+    type: 3}

@@ -2,7 +2,9 @@ using UnityEngine;
 
 public class Seed : MonoBehaviour
 {
+    [SerializeField] ItemType type;
     [SerializeField] Rigidbody rb;
+    [SerializeField] GameObject plantPrefab;
 
     void Start()
     {
