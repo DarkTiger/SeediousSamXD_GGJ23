@@ -6,6 +6,7 @@ public class Bullet : MonoBehaviour
 
     public int PlayerIndex { get; set; } = -1;
     public float Damage { get; set; } = 1f;
+    public float Speed { get; set; }
 
 
     private void Start()
@@ -15,7 +16,7 @@ public class Bullet : MonoBehaviour
 
     void Update()
     {
-        transform.position += transform.forward * speed * Time.deltaTime;
+        transform.position += transform.forward * Speed * Time.deltaTime;
     }
 
     private void OnTriggerEnter(Collider other)

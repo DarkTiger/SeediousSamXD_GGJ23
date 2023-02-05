@@ -1,5 +1,7 @@
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Random = UnityEngine.Random;
 
 public class Player : MonoBehaviour
 {
@@ -18,16 +20,37 @@ public class Player : MonoBehaviour
     public InputAction UseObjectAction { get; private set; }
     public InputAction BucketAction { get; private set; }
     public int PlayerIndex { get; private set; } = -1;
+    public bool Died { get; private set; } = false;
+
+    public ItemType[] InventorySlots = new ItemType[4];
+
+    [SerializeField] PlantPrefab[] plantsPrefabs;
+
+    [Serializable]
+    public struct PlantPrefab
+    {
+        public ItemType Type;
+        public GameObject Prefab;
+    }
 
     PlayerInput playerInput;
     SkinnedMeshRenderer skinnedMeshRenderer;
     Animator animator;
-    Rigidbody rb;
+    public Rigidbody rb { get; private set; }
     bool isGrounded = false;
-    int selectedSlot = -1;
-    public bool Died { get; private set; } = false;
+    bool lastGrounded = false;
+    int selectedSlot = 0;
 
-
+    [SerializeField] AudioClip JumpP1SFX;
+    [SerializeField] AudioClip JumpP2SFX;
+    [SerializeField] AudioClip AttackEmptySFX;
+    [SerializeField] AudioClip AttackHitSFX;
+    [SerializeField] AudioClip[] TakeDamageP1SFX;
+    [SerializeField] AudioClip[] TakeDamageP2SFX;
+    [SerializeField] AudioClip LandingP1SFx;
+    [SerializeField] AudioClip LandingP2SFX;
+    [SerializeField] AudioClip[] PlantSFX;
+    [SerializeField] AudioClip GatherSFX;
 
     private void Awake()
     {
@@ -78,6 +101,12 @@ public class Player : MonoBehaviour
         }
 
         isGrounded = Physics.OverlapSphere(transform.position - (transform.up * 0.475f), 0.75f).Length > 1;
+
+        if (lastGrounded != isGrounded)
+        {
+            AudioSource.PlayClipAtPoint(PlayerIndex == 1? LandingP1SFx : LandingP2SFX, transform.position);
+            lastGrounded = isGrounded;
+        }
     }
 
     private void Update()
@@ -86,6 +115,7 @@ public class Player : MonoBehaviour
 
         if (JumpAction.WasPressedThisFrame() && isGrounded)
         {
+            AudioSource.PlayClipAtPoint(PlayerIndex == 1? JumpP1SFX : JumpP2SFX, transform.position);
             rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
         }
 
@@ -124,24 +154,130 @@ public class Player : MonoBehaviour
         }
 
         animator.SetBool("Move", rb.velocity.magnitude > 5f);
+
+        if (GatherAction.WasPressedThisFrame())
+        {
+            Gather();
+        }
+
+        if (UseObjectAction.WasPressedThisFrame())
+        {
+            UseObject();
+        }
     }
 
     public void SelectSlot(int slotIndex)
     {
         HUD.Instance.MoveSelectorPlayer(PlayerIndex, slotIndex);
+        selectedSlot = slotIndex;
+    }
+
+    private void Gather()
+    {
+        Seed[] seeds = FindObjectsByType<Seed>(FindObjectsSortMode.None);
+
+        for (int i = 0; i < seeds.Length; i++)
+        {
+            if ((seeds[i].transform.position - transform.position).magnitude <= 2.5f &&
+                Vector3.Dot((seeds[i].transform.position - transform.position).normalized, transform.forward) >= 0.7f)
+            {
+                for (int s = 0; s < InventorySlots.Length; s++)
+                {
+                    if (i < InventorySlots.Length && InventorySlots[s] == ItemType.None)
+                    {
+                        AudioSource.PlayClipAtPoint(GatherSFX, transform.position);
+                        InventorySlots[s] = seeds[i].ItemType;
+                        HUD.Instance.UpdateInventory(this);
+                        Destroy(seeds[i].gameObject);
+                        return;
+                    }
+                }
+            }
+        }
+    }
+
+    private void UseObject()
+    {
+        ItemType itemType = InventorySlots[selectedSlot];
+
+        if (itemType == ItemType.Sniper || itemType == ItemType.SMG || itemType == ItemType.Shotgun || itemType == ItemType.Pistol)
+        {
+            for (int i = 0; i < plantsPrefabs.Length; i++)
+            {
+                if (plantsPrefabs[i].Type == itemType)
+                {
+                    if (plantsPrefabs[i].Prefab)
+                    {
+                        AudioSource.PlayClipAtPoint(PlantSFX[Random.Range(0, PlantSFX.Length)], transform.position);
+
+                        Vector3 position = transform.position + transform.forward;
+                        position.y = 0f;
+
+                        Instantiate(plantsPrefabs[i].Prefab, position, transform.rotation).GetComponent<Plant>().PlayerIndex = PlayerIndex; ;
+                        InventorySlots[selectedSlot] = ItemType.None;
+                        HUD.Instance.UpdateInventory(this);
+                        animator.SetTrigger("Plant");
+                        break;
+                    }   
+                }
+        }
+            }           
+        else
+        {
+
+        }
     }
 
     public void Attack()
     {
-        SeedBag[] seedBags = FindObjectsByType<SeedBag>(FindObjectsSortMode.None);
+        bool emptyHit = true;
 
+        SeedBag[] seedBags = FindObjectsByType<SeedBag>(FindObjectsSortMode.None);
         for (int i = 0; i < seedBags.Length; i++)
         {
             if ((seedBags[i].transform.position - transform.position).magnitude <= 3.5f &&
                 Vector3.Dot((seedBags[i].transform.position - transform.position).normalized, transform.forward) >= 0.7f)
             {
+                emptyHit = false;
+                AudioSource.PlayClipAtPoint(AttackHitSFX, transform.position);
                 seedBags[i].OpenBag();
+                break;
             }
+        }
+
+        Player[] players = FindObjectsByType<Player>(FindObjectsSortMode.None);
+        for (int i = 0; i < players.Length; i++)
+        {
+            if (players[i] == this) continue;
+
+            if ((players[i].transform.position - transform.position).magnitude <= 3.5f &&
+                Vector3.Dot((players[i].transform.position - transform.position).normalized, transform.forward) >= 0.7f)
+            {
+                emptyHit = false;
+                AudioSource.PlayClipAtPoint(AttackHitSFX, transform.position);
+                players[i].rb.AddForce((transform.forward) + (Vector3.up ) * 50f, ForceMode.Impulse);
+                break;
+            }
+        }
+
+        Plant[] plants = FindObjectsByType<Plant>(FindObjectsSortMode.None);
+        for (int i = 0; i < plants.Length; i++)
+        {
+            if (plants[i].PlayerIndex == PlayerIndex) continue;
+
+            if ((plants[i].transform.position - transform.position).magnitude <= 3.5f &&
+                Vector3.Dot((plants[i].transform.position - transform.position).normalized, transform.forward) >= 0.7f)
+            {
+                emptyHit = false;
+                AudioSource.PlayClipAtPoint(AttackHitSFX, transform.position);
+                plants[i].TakeDamage();
+                break;
+            }
+        }
+
+        if (emptyHit)
+        {
+            AudioSource.PlayClipAtPoint(AttackEmptySFX, transform.position);
         }
     }
 
@@ -157,12 +293,14 @@ public class Player : MonoBehaviour
         }
         else
         {
+            AudioSource.PlayClipAtPoint(PlayerIndex == 1? TakeDamageP1SFX[Random.Range(0, TakeDamageP1SFX.Length)] : TakeDamageP2SFX[Random.Range(0, TakeDamageP2SFX.Length)], transform.position);
             animator.SetTrigger("TakeDamage");
         }
     }
     
     public void Die()
     {
+        AudioSource.PlayClipAtPoint(PlayerIndex == 1 ? TakeDamageP1SFX[Random.Range(0, TakeDamageP1SFX.Length)] : TakeDamageP2SFX[Random.Range(0, TakeDamageP2SFX.Length)], transform.position);
         animator.SetBool("Died", true);
         Died = true;
     }

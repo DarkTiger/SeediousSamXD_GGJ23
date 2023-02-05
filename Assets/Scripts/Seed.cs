@@ -2,9 +2,8 @@ using UnityEngine;
 
 public class Seed : MonoBehaviour
 {
-    [SerializeField] ItemType type;
+    public ItemType ItemType;
     [SerializeField] Rigidbody rb;
-    [SerializeField] GameObject plantPrefab;
 
     void Start()
     {

@@ -4,10 +4,9 @@ public class SeedBag : MonoBehaviour
 {
     [SerializeField] Seed[] seeds;
 
-
     public void OpenBag()
     {
-        int seedsCount = Random.Range(2, 4);
+        int seedsCount = Random.Range(1, 3);
 
         for (int i = 0; i < seedsCount; i++)
         {

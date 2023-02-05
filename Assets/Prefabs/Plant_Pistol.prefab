@@ -53,12 +53,12 @@ CapsuleCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
-  m_Radius: 0.5
-  m_Height: 1.2
-  m_Direction: 1
-  m_Center: {x: 0, y: 0.5, z: 0}
+  m_Radius: 0.53
+  m_Height: 1.5
+  m_Direction: 2
+  m_Center: {x: 0, y: 0.55, z: 0.1}
 --- !u!114 &2916289479645351742
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -71,14 +71,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 354ce30ca65080f44a76f9155f940308, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 25
+  type: 1
+  damage: 5
   fireRange: 20
   fireRate: 2
-  aimSpeed: 1.5
+  aimSpeed: 2.5
+  bulletSpeed: 20
   bulletSpawnDelay: 0.25
   firePosition: {fileID: 5870712421851422685}
   bulletPrefab: {fileID: 4874650666175389375, guid: 214bcda3fb806c94d952a43e5c025739,
     type: 3}
+  materials:
+  - {fileID: 2100000, guid: cede242e399ba1540acef1171f1996a7, type: 2}
+  - {fileID: 2100000, guid: 889ec5dace8220544a53e3c0501e5d1a, type: 2}
+  FireSFX: {fileID: 8300000, guid: 9b4ed4c3e12fab345b3e63bd147e85fd, type: 3}
+  DeadSFX: {fileID: 8300000, guid: e3c0363e0629e4a47af9c4b6ddd2ad94, type: 3}
 --- !u!1 &7621336785140145414
 GameObject:
   m_ObjectHideFlags: 0
@@ -240,6 +247,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -5668381761930419283, guid: d9bfc908fdae5334c9c3957fc50c2e3a,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 889ec5dace8220544a53e3c0501e5d1a, type: 2}
+    - target: {fileID: -5668381761930419283, guid: d9bfc908fdae5334c9c3957fc50c2e3a,
+        type: 3}
+      propertyPath: m_Materials.Array.data[1]
+      value: 
+      objectReference: {fileID: 2100000, guid: e536d97fd8d331e43b498fd2ad70d3e8, type: 2}
     - target: {fileID: 919132149155446097, guid: d9bfc908fdae5334c9c3957fc50c2e3a,
         type: 3}
       propertyPath: m_Name
